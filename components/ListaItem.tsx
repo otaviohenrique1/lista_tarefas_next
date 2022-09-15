@@ -28,7 +28,7 @@ export function ListaItem(props: ListaItemProps) {
             <Form.Check
               className="my-0"
               type="checkbox"
-              id="feito"
+              id={`feito-checkbox-${props.id}`}
               label="Feito"
               checked={foiFeito}
               onClick={() => setFoiFeito(!foiFeito)} />
@@ -37,15 +37,19 @@ export function ListaItem(props: ListaItemProps) {
             className="d-flex align-items-center ms-1"
             variant="primary"
             onClick={props.onClickEditar}
+            disabled={(foiFeito) ? true : false}
           >
             <AiFillEdit />
+            <span className="ms-1">Editar</span>
           </Button>
           <Button
             className="d-flex align-items-center ms-1"
             variant="danger"
             onClick={props.onClickRemover}
+            disabled={(foiFeito) ? true : false}
           >
             <AiFillDelete />
+            <span className="ms-1">Remover</span>
           </Button>
         </Col>
         <Col sm={12} className="d-flex flex-row align-items-center justify-content-end mt-2">
