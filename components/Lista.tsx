@@ -31,7 +31,8 @@ export default function Lista(props: ListaProps) {
               atualizado={item.atualizado}
               onClickEditar={() => { }}
               onClickRemover={() => {
-                let resultado = data.filter((item_filtrado) => item_filtrado.id !== item.id)
+                let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
+                let resultado = data.filter(filtraItem)
                 setData(resultado);
               }}
             />
