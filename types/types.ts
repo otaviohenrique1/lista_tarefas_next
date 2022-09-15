@@ -5,3 +5,7 @@ export type TarefaTypes = {
   criado: Date;
   atualizado: Date;
 }
+
+export interface FormTypes {
+  tarefa: string;
+}

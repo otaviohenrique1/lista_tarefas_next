@@ -2,10 +2,9 @@ import { FormikHelpers, useFormik } from 'formik';
 import React from 'react'
 import { Button, ButtonGroup, Col, Form } from 'react-bootstrap';
 import * as yup from "yup";
-
-interface FormTypes {
-  tarefa: string;
-}
+import { FormTypes } from '../types/types';
+import { MdOutlineAddCircleOutline } from "react-icons/md";
+import { AiOutlineClear } from "react-icons/ai";
 
 const valoresIniciais: FormTypes = {
   tarefa: "",
@@ -56,12 +55,20 @@ export default function Formulario(props: FormularioProps) {
             <Button
               variant="primary"
               type="submit"
-            >Entrar</Button>
+              className="d-flex align-items-center flex-row"
+            >
+              <MdOutlineAddCircleOutline size={20}/>
+              <span className="ms-1">Criar</span>
+            </Button>
             <Button
               variant="danger"
               type="button"
+              className="d-flex align-items-center flex-row"
               onClick={() => formik.resetForm()}
-            >Limpar</Button>
+            >
+              <AiOutlineClear size={20} color="#ffffff" />
+              <span className="ms-1">Limpar</span>
+            </Button>
           </ButtonGroup>
         </div>
       </div>
