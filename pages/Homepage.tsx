@@ -8,6 +8,8 @@ import { TarefaTypes } from '../types/types';
 import * as yup from "yup";
 import { useFormik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
+import { v4 as uuidv4 } from 'uuid';
+uuidv4();
 
 interface FormTypes {
   tarefa: string;
@@ -23,16 +25,19 @@ const validationSchema = yup.object().shape({
 
 export default function Homepage() {
   const [data, setData] = useState<TarefaTypes[]>([]);
+  
   useEffect(() => {
     setData(listaTarefas);
   }, []);
 
+  const onSubmitForm = (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
+    helpers.resetForm();
+  }
+
   const formik = useFormik({
     initialValues: valoresIniciais,
     validationSchema: validationSchema,
-    onSubmit: (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
-      helpers.resetForm();
-    }
+    onSubmit: onSubmitForm
   });
 
   return (
