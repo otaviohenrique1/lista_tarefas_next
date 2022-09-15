@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, ButtonGroup, Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
+import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 import { FaTasks } from "react-icons/fa";
 import { listaTarefas } from '../utils/listaTarefas';
 import { ListaItem } from '../components/ListaItem';
@@ -7,16 +7,30 @@ import { FormTypes, TarefaTypes } from '../types/types';
 import { FormikHelpers } from 'formik/dist/types';
 import { v4 as uuidv4 } from 'uuid';
 import Formulario from '../components/Formulario';
-uuidv4();
+import Lista from '../components/Lista';
 
 export default function Homepage() {
   const [data, setData] = useState<TarefaTypes[]>([]);
   
-  useEffect(() => {
-    setData(listaTarefas);
-  }, []);
-
+  // useEffect(() => {
+  //   setData(listaTarefas);
+  // }, []);
+  
   const onSubmitForm = (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
+    let id = uuidv4().toString();
+
+    let item_data: TarefaTypes = {
+      id: uuidv4().toString(),
+      tarefa: values.tarefa,
+      feito: false,
+      criado: new Date,
+      atualizado: new Date,
+    }
+
+    setData([...data, item_data]);
+    
+    console.log("item_data");
+    
     helpers.resetForm();
   }
 
@@ -28,22 +42,7 @@ export default function Homepage() {
           <h1 className="ms-3">Lista de Tarefas</h1>
         </Col>
         <Formulario onSubmit={onSubmitForm} />
-        <Col sm={12}>
-          <ListGroup>
-            {data.map((item, index) => (
-              <ListaItem
-                key={index}
-                id={item.id}
-                tarefa={item.tarefa}
-                feito={item.feito}
-                criado={item.criado}
-                atualizado={item.atualizado}
-                onClickEditar={() => { }}
-                onClickRemover={() => { }}
-              />
-            ))}
-          </ListGroup>
-        </Col>
+        <Lista lista={data} />
       </Row>
     </Container>
   )

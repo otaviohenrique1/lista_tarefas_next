@@ -5,7 +5,7 @@ import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import styled from 'styled-components';
 import { TarefaTypes } from '../types/types';
 
-type ListaItemProps = TarefaTypes & {
+export type ListaItemProps = TarefaTypes & {
   onClickEditar: MouseEventHandler<HTMLButtonElement>;
   onClickRemover: MouseEventHandler<HTMLButtonElement>;
 };

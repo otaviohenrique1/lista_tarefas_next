@@ -22,9 +22,7 @@ export default function Formulario(props: FormularioProps) {
   const formik = useFormik({
     initialValues: valoresIniciais,
     validationSchema: validationSchema,
-    onSubmit: (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
-      helpers.resetForm();
-    }
+    onSubmit: props.onSubmit
   });
 
   return (
@@ -49,28 +47,28 @@ export default function Formulario(props: FormularioProps) {
               </Form.Text>
             ) : null}
           </Form.Group>
+          <div className="d-flex align-items-center justify-content-end">
+            <ButtonGroup className="mt-2">
+              <Button
+                variant="primary"
+                type="submit"
+                className="d-flex align-items-center flex-row"
+              >
+                <MdOutlineAddCircleOutline size={20}/>
+                <span className="ms-1">Criar</span>
+              </Button>
+              <Button
+                variant="danger"
+                type="button"
+                className="d-flex align-items-center flex-row"
+                onClick={() => formik.resetForm()}
+              >
+                <AiOutlineClear size={20} color="#ffffff" />
+                <span className="ms-1">Limpar</span>
+              </Button>
+            </ButtonGroup>
+          </div>
         </Form>
-        <div className="d-flex align-items-center justify-content-end">
-          <ButtonGroup className="mt-2">
-            <Button
-              variant="primary"
-              type="submit"
-              className="d-flex align-items-center flex-row"
-            >
-              <MdOutlineAddCircleOutline size={20}/>
-              <span className="ms-1">Criar</span>
-            </Button>
-            <Button
-              variant="danger"
-              type="button"
-              className="d-flex align-items-center flex-row"
-              onClick={() => formik.resetForm()}
-            >
-              <AiOutlineClear size={20} color="#ffffff" />
-              <span className="ms-1">Limpar</span>
-            </Button>
-          </ButtonGroup>
-        </div>
       </div>
     </Col>
   )
