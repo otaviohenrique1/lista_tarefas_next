@@ -3,7 +3,7 @@ import { ButtonGroup, Col, Container, ListGroup, Row } from 'react-bootstrap';
 import { FaTasks } from "react-icons/fa";
 import { GrAddCircle } from "react-icons/gr";
 import { listaTarefas } from '../utils/listaTarefas';
-import { ListaItem } from './ListaItemProps';
+import { ListaItem } from '../components/ListaItem';
 import { TarefaTypes } from '../types/types';
 
 export default function Homepage() {
