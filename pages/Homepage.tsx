@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, ButtonGroup, Col, Container, Form, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { FaTasks } from "react-icons/fa";
 import { listaTarefas } from '../utils/listaTarefas';
@@ -35,10 +35,6 @@ const validationSchema = yup.object().shape({
 export default function Homepage() {
   const [data, setData] = useState<TarefaTypes[]>([]);
   const [modoEditar, setModoEditar] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   setData(listaTarefas);
-  // }, []);
 
   const onSubmitForm = (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
     let id = uuidv4().toString();
