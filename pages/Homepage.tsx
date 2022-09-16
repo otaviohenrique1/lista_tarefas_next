@@ -126,11 +126,16 @@ export default function Homepage() {
                     {(modoEditar) ? (
                       <>
                         <Col sm={12} className="my-2">
-                          <Form.Control
-                            type="text"
-                            id="editar_tarefa"
-                            value={item.tarefa}
-                          />
+                          <Form>
+                            <Form.Group>
+                              <Form.Control
+                                type="text"
+                                id="editar_tarefa"
+                                value={item.tarefa}
+                              />
+                              <Form.Text></Form.Text>
+                            </Form.Group>
+                          </Form>
                         </Col>
                         <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">
                           <Button
