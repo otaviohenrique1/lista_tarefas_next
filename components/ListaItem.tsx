@@ -12,6 +12,7 @@ export type ListaItemProps = TarefaTypes & {
 
 export function ListaItem(props: ListaItemProps) {
   const [foiFeito, setFoiFeito] = useState<boolean>(false);
+  const [modoEdicao, setModoEdicao] = useState<boolean>(false);
 
   useEffect(() => {
     setFoiFeito(props.feito);
@@ -21,6 +22,11 @@ export function ListaItem(props: ListaItemProps) {
     <ListGroupItem>
       <Row>
         <Col sm={12} className="my-2">
+          <Form>
+            <Form.Group>
+              <Form.Control />
+            </Form.Group>
+          </Form>
           <Paragrafo feito={foiFeito}>{props.tarefa}</Paragrafo>
         </Col>
         <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">

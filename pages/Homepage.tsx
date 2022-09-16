@@ -136,7 +136,11 @@ export default function Homepage() {
                           onClick={() => {
                             let resultado = data.map((item_busca) => {
                               if (item_busca.id === item.id) {
-                                return { ...item_busca, feito: !item.feito }
+                                return { 
+                                  ...item_busca,
+                                  feito: !item.feito,
+                                  atualizado: new Date(),
+                                }
                               }
                               return item_busca;
                             });
