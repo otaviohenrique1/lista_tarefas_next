@@ -34,6 +34,7 @@ const validationSchema = yup.object().shape({
 
 export default function Homepage() {
   const [data, setData] = useState<TarefaTypes[]>([]);
+  const [modoEditar, setModoEditar] = useState<boolean>(false);
 
   // useEffect(() => {
   //   setData(listaTarefas);
@@ -122,54 +123,93 @@ export default function Homepage() {
               : data.map((item, index) => (
                 <ListGroupItem key={index}>
                   <Row>
-                    <Col sm={12} className="my-2">
-                      <Paragrafo feito={item.feito}>{item.tarefa}</Paragrafo>
-                    </Col>
-                    <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">
-                      <div className="rounded border py-1 px-2 ms-1">
-                        <Form.Check
-                          className="my-0"
-                          type="checkbox"
-                          id={`feito-checkbox-${item.id}`}
-                          label="Feito"
-                          checked={item.feito}
-                          onClick={() => {
-                            let resultado = data.map((item_busca) => {
-                              if (item_busca.id === item.id) {
-                                return { 
-                                  ...item_busca,
-                                  feito: !item.feito,
-                                  atualizado: new Date(),
-                                }
-                              }
-                              return item_busca;
-                            });
-                            setData(resultado);
-                          }} />
-                      </div>
-                      <Button
-                        className="d-flex align-items-center ms-1"
-                        variant="primary"
-                        onClick={() => {}}
-                        disabled={(item.feito) ? true : false}
-                      >
-                        <AiFillEdit />
-                        <span className="ms-1">Editar</span>
-                      </Button>
-                      <Button
-                        className="d-flex align-items-center ms-1"
-                        variant="danger"
-                        onClick={() => {
-                          let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
-                          let resultado = data.filter(filtraItem)
-                          setData(resultado);
-                        }}
-                        disabled={(item.feito) ? true : false}
-                      >
-                        <AiFillDelete />
-                        <span className="ms-1">Remover</span>
-                      </Button>
-                    </Col>
+                    {(modoEditar) ? (
+                      <>
+                        <Col sm={12} className="my-2">
+                          <Form.Control
+                            type="text"
+                            id="editar_tarefa"
+                            value={item.tarefa}
+                          />
+                        </Col>
+                        <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">
+                          <Button
+                            className="d-flex align-items-center ms-1"
+                            variant="primary"
+                            onClick={() => {
+                              setModoEditar(!modoEditar);
+                            }}
+                          >
+                            <AiFillEdit />
+                            <span className="ms-1">Salvar</span>
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center ms-1"
+                            variant="danger"
+                            onClick={() => {}}
+                          >
+                            <AiFillDelete />
+                            <span className="ms-1">Limpar</span>
+                          </Button>
+                        </Col>
+                      </>
+                    ) : (
+                      <>
+                        <Col sm={12} className="my-2">
+                          <Paragrafo
+                            feito={item.feito}
+                            className="rounded border disabled px-2 py-1"
+                          >{item.tarefa}</Paragrafo>
+                        </Col>
+                        <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">
+                          <div className="rounded border py-1 px-2 ms-1">
+                            <Form.Check
+                              className="my-0"
+                              type="checkbox"
+                              id={`feito-checkbox-${item.id}`}
+                              label="Feito"
+                              checked={item.feito}
+                              onClick={() => {
+                                let resultado = data.map((item_busca) => {
+                                  if (item_busca.id === item.id) {
+                                    return {
+                                      ...item_busca,
+                                      feito: !item.feito,
+                                      atualizado: new Date(),
+                                    }
+                                  }
+                                  return item_busca;
+                                });
+                                setData(resultado);
+                              }} />
+                          </div>
+                          <Button
+                            className="d-flex align-items-center ms-1"
+                            variant="primary"
+                            onClick={() => {
+                              setModoEditar(!modoEditar);
+                            }}
+                            disabled={(item.feito) ? true : false}
+                          >
+                            <AiFillEdit />
+                            <span className="ms-1">Editar</span>
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center ms-1"
+                            variant="danger"
+                            onClick={() => {
+                              let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
+                              let resultado = data.filter(filtraItem)
+                              setData(resultado);
+                            }}
+                            disabled={(item.feito) ? true : false}
+                          >
+                            <AiFillDelete />
+                            <span className="ms-1">Remover</span>
+                          </Button>
+                        </Col>
+                      </>
+                    )}
                     <Col sm={12} className="d-flex flex-row align-items-center justify-content-end mt-2">
                       <Row className="m-0 p-0 w-100">
                         <Col sm={12} md={6} className="m-0 p-0">
