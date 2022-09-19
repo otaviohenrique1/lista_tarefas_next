@@ -11,6 +11,7 @@ import { AiFillDelete, AiFillEdit, AiOutlineClear } from 'react-icons/ai';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import { Flex } from '../components/Flex';
+import { Paragrafo } from '../components/Paragrafo';
 
 type TarefaTypes = {
   id: string;
@@ -60,14 +61,17 @@ export default function Homepage() {
   });
 
   return (
-    <Container className="pt-5 pb-5" fluid>
+    <Container className="py-5 px-3" fluid>
       <Row>
         <Col sm={12} className="mb-5 d-flex flex-row align-items-center justify-content-center">
+          <Flex
+
+          ></Flex>
           <FaTasks size={30} />
           <h1 className="ms-3">Lista de Tarefas</h1>
         </Col>
         <Col sm={12} className="mb-2">
-          <div className="rounded border px-2 py-3">
+          <div className="rounded border p-3">
             <Form onSubmit={formik.handleSubmit}>
               <Form.Group
                 controlId="tarefa"
@@ -79,8 +83,10 @@ export default function Homepage() {
                 >Nova tarefa</Form.Label>
                 <Form.Control
                   type="text"
+                  as="textarea"
                   name="tarefa"
                   placeholder="Digite a tarefa"
+                  rows={1}
                   value={formik.values.tarefa}
                 />
                 {formik.errors.tarefa && formik.touched.tarefa ? (
@@ -89,29 +95,31 @@ export default function Homepage() {
                   </Form.Text>
                 ) : null}
               </Form.Group>
-              <div className="d-flex align-items-center justify-content-end">
-                <ButtonGroup className="mt-2">
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    // className="d-flex align-items-center flex-row"
-                  >
-                    <Flex>
-                      <MdOutlineAddCircleOutline size={20} />
-                      <span className="ms-1">Criar</span>
-                    </Flex>
-                  </Button>
-                  <Button
-                    variant="danger"
-                    type="button"
-                    className="d-flex align-items-center flex-row"
-                    onClick={() => formik.resetForm()}
-                  >
-                    <AiOutlineClear size={20} color="#ffffff" />
-                    <span className="ms-1">Limpar</span>
-                  </Button>
-                </ButtonGroup>
-              </div>
+              <Flex alignItems="center" justifyContent="end">
+                {/* <div className="d-flex align-items-center justify-content-end"> */}
+                  <ButtonGroup className="mt-2">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                    >
+                      <Flex alignItems="center" flexDirection="row">
+                        <MdOutlineAddCircleOutline size={20} />
+                        <span className="ms-1">Criar</span>
+                      </Flex>
+                    </Button>
+                    <Button
+                      variant="danger"
+                      type="button"
+                      onClick={() => formik.resetForm()}
+                    >
+                      <Flex alignItems="center" flexDirection="row">
+                        <AiOutlineClear size={20} color="#ffffff" />
+                        <span className="ms-1">Limpar</span>
+                      </Flex>
+                    </Button>
+                  </ButtonGroup>
+                {/* </div> */}
+              </Flex>
             </Form>
           </div>
         </Col>
@@ -126,37 +134,43 @@ export default function Homepage() {
                   <Row>
                     {(modoEditar) ? (
                       <>
-                        <Col sm={12} className="my-2">
+                        <Col sm={12} className="mt-2 mb-4">
                           <Form>
                             <Form.Group>
                               <Form.Control
                                 type="text"
+                                as="textarea"
                                 id="editar_tarefa"
                                 value={item.tarefa}
+                                rows={1}
                               />
                               <Form.Text className="text-danger"></Form.Text>
                             </Form.Group>
                           </Form>
                         </Col>
                         <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">
-                          <Button
-                            className="d-flex align-items-center ms-1"
-                            variant="primary"
-                            onClick={() => {
-                              setModoEditar(!modoEditar);
-                            }}
-                          >
-                            <AiFillEdit />
-                            <span className="ms-1">Salvar</span>
-                          </Button>
-                          <Button
-                            className="d-flex align-items-center ms-1"
-                            variant="danger"
-                            onClick={() => {}}
-                          >
-                            <AiFillDelete />
-                            <span className="ms-1">Limpar</span>
-                          </Button>
+                          <ButtonGroup>
+                            <Button
+                              variant="primary"
+                              onClick={() => {
+                                setModoEditar(!modoEditar);
+                              }}
+                            >
+                              <Flex alignItems="center" flexDirection="row">
+                                <AiFillEdit />
+                                <span className="ms-1">Salvar</span>
+                              </Flex>
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => { }}
+                            >
+                              <Flex alignItems="center" flexDirection="row">
+                                <AiFillDelete />
+                                <span className="ms-1">Limpar</span>
+                              </Flex>
+                            </Button>
+                          </ButtonGroup>
                         </Col>
                       </>
                     ) : (
@@ -164,11 +178,11 @@ export default function Homepage() {
                         <Col sm={12} className="my-2">
                           <Paragrafo
                             feito={item.feito}
-                            className="rounded border disabled px-2 py-1"
+                            className="form-control bg-secondary bg-opacity-10"
                           >{item.tarefa}</Paragrafo>
                         </Col>
-                        <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">
-                          <div className="rounded border py-1 px-2 ms-1">
+                        <Col sm={12} className="d-flex align-items-center flex-row justify-content-between">
+                          <div className="rounded border py-1 px-2">
                             <Form.Check
                               className="my-0"
                               type="checkbox"
@@ -189,34 +203,38 @@ export default function Homepage() {
                                 setData(resultado);
                               }} />
                           </div>
-                          <Button
-                            className="d-flex align-items-center ms-1"
-                            variant="primary"
-                            onClick={() => {
-                              setModoEditar(!modoEditar);
-                            }}
-                            disabled={(item.feito) ? true : false}
-                          >
-                            <AiFillEdit />
-                            <span className="ms-1">Editar</span>
-                          </Button>
-                          <Button
-                            className="d-flex align-items-center ms-1"
-                            variant="danger"
-                            onClick={() => {
-                              let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
-                              let resultado = data.filter(filtraItem)
-                              setData(resultado);
-                            }}
-                            disabled={(item.feito) ? true : false}
-                          >
-                            <AiFillDelete />
-                            <span className="ms-1">Remover</span>
-                          </Button>
+                          <ButtonGroup>
+                            <Button
+                              variant="primary"
+                              onClick={() => {
+                                setModoEditar(!modoEditar);
+                              }}
+                              disabled={(item.feito) ? true : false}
+                            >
+                              <Flex alignItems="center" flexDirection="row">
+                                <AiFillEdit />
+                                <span className="ms-1">Editar</span>
+                              </Flex>
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => {
+                                let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
+                                let resultado = data.filter(filtraItem)
+                                setData(resultado);
+                              }}
+                              disabled={(item.feito) ? true : false}
+                            >
+                              <Flex alignItems="center" flexDirection="row">
+                                <AiFillDelete />
+                                <span className="ms-1">Remover</span>
+                              </Flex>
+                            </Button>
+                          </ButtonGroup>
                         </Col>
                       </>
                     )}
-                    <Col sm={12} className="d-flex flex-row align-items-center justify-content-end mt-2">
+                    <Col sm={12} className="d-flex flex-row align-items-center justify-content-end mt-2 px-2">
                       <Row className="m-0 p-0 w-100">
                         <Col sm={12} md={6} className="m-0 p-0">
                           <div className="rounded border py-1 px-2 m-1">
@@ -242,14 +260,6 @@ export default function Homepage() {
     </Container>
   )
 }
-
-type ParagrafoStyledProps = {
-  feito: boolean;
-};
-
-const Paragrafo = styled.p<ParagrafoStyledProps> `
-  text-decoration: ${(props) => (props.feito) ? "line-through" : "none"};
-`;
 
 function FormataData(valor_data: Date) {
   const data = format(valor_data, "dd/MM/yyyy");
