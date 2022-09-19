@@ -10,6 +10,7 @@ import { MdOutlineAddCircleOutline } from 'react-icons/md';
 import { AiFillDelete, AiFillEdit, AiOutlineClear } from 'react-icons/ai';
 import styled from 'styled-components';
 import { format } from 'date-fns';
+import { Flex } from '../components/Flex';
 
 type TarefaTypes = {
   id: string;
@@ -73,7 +74,9 @@ export default function Homepage() {
                 onChange={formik.handleChange}
                 defaultValue={formik.values.tarefa}
               >
-                <Form.Label>Nova tarefa</Form.Label>
+                <Form.Label
+                  className="mb-1"
+                >Nova tarefa</Form.Label>
                 <Form.Control
                   type="text"
                   name="tarefa"
@@ -81,7 +84,7 @@ export default function Homepage() {
                   value={formik.values.tarefa}
                 />
                 {formik.errors.tarefa && formik.touched.tarefa ? (
-                  <Form.Text className="text-danger">
+                  <Form.Text className="text-danger ps-1" as="span">
                     {formik.errors.tarefa}
                   </Form.Text>
                 ) : null}
@@ -91,10 +94,12 @@ export default function Homepage() {
                   <Button
                     variant="primary"
                     type="submit"
-                    className="d-flex align-items-center flex-row"
+                    // className="d-flex align-items-center flex-row"
                   >
-                    <MdOutlineAddCircleOutline size={20} />
-                    <span className="ms-1">Criar</span>
+                    <Flex>
+                      <MdOutlineAddCircleOutline size={20} />
+                      <span className="ms-1">Criar</span>
+                    </Flex>
                   </Button>
                   <Button
                     variant="danger"
@@ -129,7 +134,7 @@ export default function Homepage() {
                                 id="editar_tarefa"
                                 value={item.tarefa}
                               />
-                              <Form.Text></Form.Text>
+                              <Form.Text className="text-danger"></Form.Text>
                             </Form.Group>
                           </Form>
                         </Col>
