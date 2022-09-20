@@ -80,9 +80,15 @@ export default function Homepage() {
   return (
     <Container className="py-5 px-3" fluid>
       <Row>
-        <Col sm={12} className="mb-5 d-flex flex-row justify-content-center align-items-center">
-          <FaTasks size={30} />
-          <h1 className="ms-3 mb-0">Lista de Tarefas</h1>
+        <Col sm={12} className="mb-5">
+          <Flex
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="row"
+          >
+            <FaTasks size={30} />
+            <h1 className="ms-3 mb-0">Lista de Tarefas</h1>
+          </Flex>
         </Col>
         <Col sm={12} className="mb-2">
           <div className="rounded border p-3">
@@ -110,7 +116,6 @@ export default function Homepage() {
                 ) : null}
               </Form.Group>
               <Flex alignItems="center" justifyContent="end">
-                {/* <div className="d-flex align-items-center justify-content-end"> */}
                 <ButtonGroup className="mt-2">
                   <Button
                     variant="primary"
@@ -132,21 +137,10 @@ export default function Homepage() {
                     </Flex>
                   </Button>
                 </ButtonGroup>
-                {/* </div> */}
               </Flex>
             </Form>
           </div>
         </Col>
-
-
-
-
-
-
-
-
-
-        
         <Col sm={12}>
           <ListGroup>
             {(data.length === 0)
