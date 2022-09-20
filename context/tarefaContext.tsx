@@ -12,7 +12,7 @@ export const TarefaProvider: FC<TarefaProviderProps> = ({ children }) => {
   const [tarefas, setTarefas] = useState<TarefaTypes[]>([]);
 
   const criarTarefa = (tarefa: string) => {
-    let item_data: TarefaTypes = {
+    let nova_tarefa: TarefaTypes = {
       id: uuidv4().toString(),
       tarefa: tarefa,
       feito: false,
@@ -20,7 +20,7 @@ export const TarefaProvider: FC<TarefaProviderProps> = ({ children }) => {
       atualizado: new Date,
     }
 
-    setTarefas([...tarefas, item_data]);
+    setTarefas([...tarefas, nova_tarefa]);
   };
 
   const editarNomeTarefa = (id: string, tarefa: string) => {
@@ -36,15 +36,33 @@ export const TarefaProvider: FC<TarefaProviderProps> = ({ children }) => {
     });
     setTarefas(resultado);
   };
-  
+
   const editarNomeTarefa2 = (id: string, tarefa: string) => {
     tarefas.filter((item_busca: TarefaTypes) => {
       if (item_busca.id === id) {
         item_busca.tarefa = tarefa;
+        item_busca.atualizado = new Date();
         setTarefas([...tarefas]);
       }
     })
   };
+
+  const editarStatusTarefa = (id: string) => {
+    tarefas.filter((item_busca: TarefaTypes) => {
+      if (item_busca.id === id) {
+        item_busca.feito = !item_busca.feito;
+        item_busca.atualizado = new Date();
+        setTarefas([...tarefas]);
+      }
+    })
+  };
+
+  const removerTarefa = (id: string) => {
+    let resultado = tarefas.filter((item_filtrado: TarefaTypes) => item_filtrado.id !== id);
+    setTarefas(resultado);
+  };
+  
+  const listarTarefas = () => tarefas;
 
   return (
     <div>{children}</div>
