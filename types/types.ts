@@ -9,3 +9,12 @@ export type TarefaTypes = {
 export interface FormTypes {
   tarefa: string;
 }
+
+export type TarefaContextType = {
+  tarefas: TarefaTypes[];
+  criarTarefa: (tarefa: string) => void;
+  editarTarefa: (id: string, tarefa: string) => void;
+  editarTarefa2: (id: string, tarefa: string) => void;
+  removerTarefa: (id: string) => void;
+  listarTarefas: () => TarefaTypes[];
+}
