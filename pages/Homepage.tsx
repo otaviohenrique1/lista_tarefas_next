@@ -28,7 +28,6 @@ const valoresIniciaisItemEditado: TarefaTypes = {
 export default function Homepage() {
   const [tarefas, setTarefas] = useState<TarefaTypes[]>([]);
   const [modoEditar, setModoEditar] = useState<boolean>(false);
-  const [itemEditadoId, setItemEditadoId] = useState<string>("");
   const [itemEditado, setItemEditado] = useState<TarefaTypes>(valoresIniciaisItemEditado);
 
   const formikCreate = useFormik({
@@ -50,10 +49,12 @@ export default function Homepage() {
   });
 
   const formikEdit = useFormik({
-    initialValues: { tarefa: itemEditado.tarefa } || "",
+    initialValues: { tarefa: itemEditado.tarefa },
     validationSchema: validationSchema,
     enableReinitialize: true,
     onSubmit: (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
+      console.log("asdasdasdasd");
+
       let resultado = tarefas.map((item_busca) => {
         if (item_busca.id === itemEditado.id) {
           return {
@@ -64,7 +65,6 @@ export default function Homepage() {
         }
         return item_busca;
       });
-      console.log();
       
       setTarefas(resultado);
       setItemEditado(valoresIniciaisItemEditado);
@@ -156,11 +156,10 @@ export default function Homepage() {
                               defaultValue={formikEdit.values.tarefa}
                             >
                               <Form.Control
-                                // type="text"
                                 as="textarea"
                                 name="editar_tarefa"
                                 placeholder="Digite a tarefa"
-                                value={formikEdit.values.tarefa}
+                                value={item.tarefa}
                                 rows={1}
                               />
                               {formikEdit.errors.tarefa && formikEdit.touched.tarefa ? (
