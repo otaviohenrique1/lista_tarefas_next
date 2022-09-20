@@ -8,7 +8,6 @@ import * as yup from "yup";
 import { useFormik, FormikHelpers } from 'formik';
 import { MdOutlineAddCircleOutline } from 'react-icons/md';
 import { AiFillDelete, AiFillEdit, AiOutlineClear } from 'react-icons/ai';
-import styled from 'styled-components';
 import { format } from 'date-fns';
 import { Flex } from '../components/Flex';
 import { Paragrafo } from '../components/Paragrafo';
@@ -37,46 +36,61 @@ const validationSchema = yup.object().shape({
 export default function Homepage() {
   const [data, setData] = useState<TarefaTypes[]>([]);
   const [modoEditar, setModoEditar] = useState<boolean>(false);
+  const [itemEditadoId, setItemEditadoId] = useState<string>("");
 
-  const onSubmitForm = (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
-    let id = uuidv4().toString();
-
-    let item_data: TarefaTypes = {
-      id: uuidv4().toString(),
-      tarefa: values.tarefa,
-      feito: false,
-      criado: new Date,
-      atualizado: new Date,
-    }
-
-    setData([...data, item_data]);
-
-    helpers.resetForm();
-  }
-
-  const formik = useFormik({
+  const formikCreate = useFormik({
     initialValues: valoresIniciais,
     validationSchema: validationSchema,
-    onSubmit: onSubmitForm
+    onSubmit: (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
+      let item_data: TarefaTypes = {
+        id: uuidv4().toString(),
+        tarefa: values.tarefa,
+        feito: false,
+        criado: new Date,
+        atualizado: new Date,
+      }
+
+      setData([...data, item_data]);
+
+      helpers.resetForm();
+    }
+  });
+
+  const formikEdit = useFormik({
+    initialValues: valoresIniciais,
+    validationSchema: validationSchema,
+    enableReinitialize: true,
+    onSubmit: (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
+      let resultado = data.map((item_busca) => {
+        if (item_busca.id === itemEditadoId) {
+          return {
+            ...item_busca,
+            tarefa: values.tarefa,
+            atualizado: new Date(),
+          }
+        }
+        return item_busca;
+      });
+      setData(resultado);
+      setItemEditadoId("");
+      setModoEditar(!modoEditar);
+    }
   });
 
   return (
     <Container className="py-5 px-3" fluid>
       <Row>
-        <Col sm={12} className="mb-5 d-flex flex-row align-items-center justify-content-center">
-          <Flex
-
-          ></Flex>
+        <Col sm={12} className="mb-5 d-flex flex-row justify-content-center align-items-center">
           <FaTasks size={30} />
-          <h1 className="ms-3">Lista de Tarefas</h1>
+          <h1 className="ms-3 mb-0">Lista de Tarefas</h1>
         </Col>
         <Col sm={12} className="mb-2">
           <div className="rounded border p-3">
-            <Form onSubmit={formik.handleSubmit}>
+            <Form onSubmit={formikCreate.handleSubmit}>
               <Form.Group
                 controlId="tarefa"
-                onChange={formik.handleChange}
-                defaultValue={formik.values.tarefa}
+                onChange={formikCreate.handleChange}
+                defaultValue={formikCreate.values.tarefa}
               >
                 <Form.Label
                   className="mb-1"
@@ -87,42 +101,52 @@ export default function Homepage() {
                   name="tarefa"
                   placeholder="Digite a tarefa"
                   rows={1}
-                  value={formik.values.tarefa}
+                  value={formikCreate.values.tarefa}
                 />
-                {formik.errors.tarefa && formik.touched.tarefa ? (
+                {formikCreate.errors.tarefa && formikCreate.touched.tarefa ? (
                   <Form.Text className="text-danger ps-1" as="span">
-                    {formik.errors.tarefa}
+                    {formikCreate.errors.tarefa}
                   </Form.Text>
                 ) : null}
               </Form.Group>
               <Flex alignItems="center" justifyContent="end">
                 {/* <div className="d-flex align-items-center justify-content-end"> */}
-                  <ButtonGroup className="mt-2">
-                    <Button
-                      variant="primary"
-                      type="submit"
-                    >
-                      <Flex alignItems="center" flexDirection="row">
-                        <MdOutlineAddCircleOutline size={20} />
-                        <span className="ms-1">Criar</span>
-                      </Flex>
-                    </Button>
-                    <Button
-                      variant="danger"
-                      type="button"
-                      onClick={() => formik.resetForm()}
-                    >
-                      <Flex alignItems="center" flexDirection="row">
-                        <AiOutlineClear size={20} color="#ffffff" />
-                        <span className="ms-1">Limpar</span>
-                      </Flex>
-                    </Button>
-                  </ButtonGroup>
+                <ButtonGroup className="mt-2">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                  >
+                    <Flex alignItems="center" flexDirection="row">
+                      <MdOutlineAddCircleOutline size={20} />
+                      <span className="ms-1">Criar</span>
+                    </Flex>
+                  </Button>
+                  <Button
+                    variant="danger"
+                    type="button"
+                    onClick={() => formikCreate.resetForm()}
+                  >
+                    <Flex alignItems="center" flexDirection="row">
+                      <AiOutlineClear size={20} color="#ffffff" />
+                      <span className="ms-1">Limpar</span>
+                    </Flex>
+                  </Button>
+                </ButtonGroup>
                 {/* </div> */}
               </Flex>
             </Form>
           </div>
         </Col>
+
+
+
+
+
+
+
+
+
+        
         <Col sm={12}>
           <ListGroup>
             {(data.length === 0)
@@ -135,42 +159,57 @@ export default function Homepage() {
                     {(modoEditar) ? (
                       <>
                         <Col sm={12} className="mt-2 mb-4">
-                          <Form>
-                            <Form.Group>
+                          <Form
+                            onSubmit={formikEdit.handleSubmit}
+                          >
+                            <Form.Group
+                              controlId="editar_tarefa"
+                              onChange={formikEdit.handleChange}
+                              defaultValue={item.tarefa}
+                            >
                               <Form.Control
-                                type="text"
+                                // type="text"
                                 as="textarea"
-                                id="editar_tarefa"
+                                name="editar_tarefa"
+                                placeholder="Digite a tarefa"
                                 value={item.tarefa}
                                 rows={1}
                               />
-                              <Form.Text className="text-danger"></Form.Text>
+                              {formikEdit.errors.tarefa && formikEdit.touched.tarefa ? (
+                                <Form.Text className="text-danger">
+                                  {formikEdit.errors.tarefa}
+                                </Form.Text>
+                              ) : null}
                             </Form.Group>
                           </Form>
                         </Col>
-                        <Col sm={12} className="d-flex align-items-center flex-row justify-content-end">
-                          <ButtonGroup>
-                            <Button
-                              variant="primary"
-                              onClick={() => {
-                                setModoEditar(!modoEditar);
-                              }}
-                            >
-                              <Flex alignItems="center" flexDirection="row">
-                                <AiFillEdit />
-                                <span className="ms-1">Salvar</span>
-                              </Flex>
-                            </Button>
-                            <Button
-                              variant="danger"
-                              onClick={() => { }}
-                            >
-                              <Flex alignItems="center" flexDirection="row">
-                                <AiFillDelete />
-                                <span className="ms-1">Limpar</span>
-                              </Flex>
-                            </Button>
-                          </ButtonGroup>
+                        <Col sm={12}>
+                          <Flex
+                            flexDirection="row"
+                            alignItems="center"
+                            justifyContent="end"
+                          >
+                            <ButtonGroup>
+                              <Button
+                                variant="primary"
+                                type="submit"
+                              >
+                                <Flex alignItems="center" flexDirection="row">
+                                  <AiFillEdit />
+                                  <span className="ms-1">Salvar</span>
+                                </Flex>
+                              </Button>
+                              <Button
+                                variant="danger"
+                                onClick={() => formikEdit.resetForm()}
+                              >
+                                <Flex alignItems="center" flexDirection="row">
+                                  <AiFillDelete />
+                                  <span className="ms-1">Limpar</span>
+                                </Flex>
+                              </Button>
+                            </ButtonGroup>
+                          </Flex>
                         </Col>
                       </>
                     ) : (
@@ -181,56 +220,63 @@ export default function Homepage() {
                             className="form-control bg-secondary bg-opacity-10"
                           >{item.tarefa}</Paragrafo>
                         </Col>
-                        <Col sm={12} className="d-flex align-items-center flex-row justify-content-between">
-                          <div className="rounded border py-1 px-2">
-                            <Form.Check
-                              className="my-0"
-                              type="checkbox"
-                              id={`feito-checkbox-${item.id}`}
-                              label="Feito"
-                              checked={item.feito}
-                              onClick={() => {
-                                let resultado = data.map((item_busca) => {
-                                  if (item_busca.id === item.id) {
-                                    return {
-                                      ...item_busca,
-                                      feito: !item.feito,
-                                      atualizado: new Date(),
+                        <Col sm={12}>
+                          <Flex
+                            flexDirection="row"
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <div className="rounded border py-1 px-2">
+                              <Form.Check
+                                className="my-0"
+                                type="checkbox"
+                                id={`feito-checkbox-${item.id}`}
+                                label="Feito"
+                                checked={item.feito}
+                                onClick={() => {
+                                  let resultado = data.map((item_busca) => {
+                                    if (item_busca.id === item.id) {
+                                      return {
+                                        ...item_busca,
+                                        feito: !item.feito,
+                                        atualizado: new Date(),
+                                      }
                                     }
-                                  }
-                                  return item_busca;
-                                });
-                                setData(resultado);
-                              }} />
-                          </div>
-                          <ButtonGroup>
-                            <Button
-                              variant="primary"
-                              onClick={() => {
-                                setModoEditar(!modoEditar);
-                              }}
-                              disabled={(item.feito) ? true : false}
-                            >
-                              <Flex alignItems="center" flexDirection="row">
-                                <AiFillEdit />
-                                <span className="ms-1">Editar</span>
-                              </Flex>
-                            </Button>
-                            <Button
-                              variant="danger"
-                              onClick={() => {
-                                let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
-                                let resultado = data.filter(filtraItem)
-                                setData(resultado);
-                              }}
-                              disabled={(item.feito) ? true : false}
-                            >
-                              <Flex alignItems="center" flexDirection="row">
-                                <AiFillDelete />
-                                <span className="ms-1">Remover</span>
-                              </Flex>
-                            </Button>
-                          </ButtonGroup>
+                                    return item_busca;
+                                  });
+                                  setData(resultado);
+                                }} />
+                            </div>
+                            <ButtonGroup>
+                              <Button
+                                variant="primary"
+                                onClick={() => {
+                                  setItemEditadoId(item.id);
+                                  setModoEditar(!modoEditar);
+                                }}
+                                disabled={(item.feito) ? true : false}
+                              >
+                                <Flex alignItems="center" flexDirection="row">
+                                  <AiFillEdit />
+                                  <span className="ms-1">Editar</span>
+                                </Flex>
+                              </Button>
+                              <Button
+                                variant="danger"
+                                onClick={() => {
+                                  let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
+                                  let resultado = data.filter(filtraItem)
+                                  setData(resultado);
+                                }}
+                                disabled={(item.feito) ? true : false}
+                              >
+                                <Flex alignItems="center" flexDirection="row">
+                                  <AiFillDelete />
+                                  <span className="ms-1">Remover</span>
+                                </Flex>
+                              </Button>
+                            </ButtonGroup>
+                          </Flex>
                         </Col>
                       </>
                     )}
