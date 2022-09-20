@@ -11,38 +11,31 @@ import { AiFillDelete, AiFillEdit, AiOutlineClear } from 'react-icons/ai';
 import { format } from 'date-fns';
 import { Flex } from '../components/Flex';
 import { Paragrafo } from '../components/Paragrafo';
-
-type TarefaTypes = {
-  id: string;
-  tarefa: string;
-  feito: boolean;
-  criado: Date;
-  atualizado: Date;
-}
-
-type FormTypes = {
-  tarefa: string;
-}
-
-
-const valoresIniciais: FormTypes = {
-  tarefa: "",
-};
+import { FormTypes, TarefaTypes } from '../types/types';
 
 const validationSchema = yup.object().shape({
   tarefa: yup.string().required("Campo vazio"),
 });
 
+const valoresIniciaisItemEditado: TarefaTypes = {
+  id: '',
+  tarefa: '',
+  feito: false,
+  criado: new Date,
+  atualizado: new Date
+};
+
 export default function Homepage() {
-  const [data, setData] = useState<TarefaTypes[]>([]);
+  const [tarefas, setTarefas] = useState<TarefaTypes[]>([]);
   const [modoEditar, setModoEditar] = useState<boolean>(false);
   const [itemEditadoId, setItemEditadoId] = useState<string>("");
+  const [itemEditado, setItemEditado] = useState<TarefaTypes>(valoresIniciaisItemEditado);
 
   const formikCreate = useFormik({
-    initialValues: valoresIniciais,
+    initialValues: { tarefa: "" },
     validationSchema: validationSchema,
     onSubmit: (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
-      let item_data: TarefaTypes = {
+      let novaTarefa: TarefaTypes = {
         id: uuidv4().toString(),
         tarefa: values.tarefa,
         feito: false,
@@ -50,19 +43,19 @@ export default function Homepage() {
         atualizado: new Date,
       }
 
-      setData([...data, item_data]);
+      setTarefas([...tarefas, novaTarefa]);
 
       helpers.resetForm();
     }
   });
 
   const formikEdit = useFormik({
-    initialValues: valoresIniciais,
+    initialValues: { tarefa: itemEditado.tarefa } || "",
     validationSchema: validationSchema,
     enableReinitialize: true,
     onSubmit: (values: FormTypes, helpers: FormikHelpers<FormTypes>) => {
-      let resultado = data.map((item_busca) => {
-        if (item_busca.id === itemEditadoId) {
+      let resultado = tarefas.map((item_busca) => {
+        if (item_busca.id === itemEditado.id) {
           return {
             ...item_busca,
             tarefa: values.tarefa,
@@ -71,8 +64,10 @@ export default function Homepage() {
         }
         return item_busca;
       });
-      setData(resultado);
-      setItemEditadoId("");
+      console.log();
+      
+      setTarefas(resultado);
+      setItemEditado(valoresIniciaisItemEditado);
       setModoEditar(!modoEditar);
     }
   });
@@ -102,7 +97,6 @@ export default function Homepage() {
                   className="mb-1"
                 >Nova tarefa</Form.Label>
                 <Form.Control
-                  type="text"
                   as="textarea"
                   name="tarefa"
                   placeholder="Digite a tarefa"
@@ -143,11 +137,11 @@ export default function Homepage() {
         </Col>
         <Col sm={12}>
           <ListGroup>
-            {(data.length === 0)
+            {(tarefas.length === 0)
               ? <ListGroupItem>
                 <h5 className="text-center">Lista vazia</h5>
               </ListGroupItem>
-              : data.map((item, index) => (
+              : tarefas.map((item, index) => (
                 <ListGroupItem key={index}>
                   <Row>
                     {(modoEditar) ? (
@@ -159,14 +153,14 @@ export default function Homepage() {
                             <Form.Group
                               controlId="editar_tarefa"
                               onChange={formikEdit.handleChange}
-                              defaultValue={item.tarefa}
+                              defaultValue={formikEdit.values.tarefa}
                             >
                               <Form.Control
                                 // type="text"
                                 as="textarea"
                                 name="editar_tarefa"
                                 placeholder="Digite a tarefa"
-                                value={item.tarefa}
+                                value={formikEdit.values.tarefa}
                                 rows={1}
                               />
                               {formikEdit.errors.tarefa && formikEdit.touched.tarefa ? (
@@ -175,35 +169,43 @@ export default function Homepage() {
                                 </Form.Text>
                               ) : null}
                             </Form.Group>
+                            <Flex
+                              flexDirection="row"
+                              alignItems="center"
+                              justifyContent="end"
+                            >
+                              <ButtonGroup>
+                                <Button
+                                  variant="primary"
+                                  type="submit"
+                                >
+                                  <Flex alignItems="center" flexDirection="row">
+                                    <AiFillEdit />
+                                    <span className="ms-1">Salvar</span>
+                                  </Flex>
+                                </Button>
+                                <Button
+                                  variant="danger"
+                                  onClick={() => formikEdit.resetForm()}
+                                >
+                                  <Flex alignItems="center" flexDirection="row">
+                                    <AiFillDelete />
+                                    <span className="ms-1">Limpar</span>
+                                  </Flex>
+                                </Button>
+                                <Button
+                                  variant="secondary"
+                                  type="button"
+                                  onClick={() => setModoEditar(!modoEditar)}
+                                >
+                                  <Flex alignItems="center" flexDirection="row">
+                                    <AiFillDelete />
+                                    <span className="ms-1">Cancelar</span>
+                                  </Flex>
+                                </Button>
+                              </ButtonGroup>
+                            </Flex>
                           </Form>
-                        </Col>
-                        <Col sm={12}>
-                          <Flex
-                            flexDirection="row"
-                            alignItems="center"
-                            justifyContent="end"
-                          >
-                            <ButtonGroup>
-                              <Button
-                                variant="primary"
-                                type="submit"
-                              >
-                                <Flex alignItems="center" flexDirection="row">
-                                  <AiFillEdit />
-                                  <span className="ms-1">Salvar</span>
-                                </Flex>
-                              </Button>
-                              <Button
-                                variant="danger"
-                                onClick={() => formikEdit.resetForm()}
-                              >
-                                <Flex alignItems="center" flexDirection="row">
-                                  <AiFillDelete />
-                                  <span className="ms-1">Limpar</span>
-                                </Flex>
-                              </Button>
-                            </ButtonGroup>
-                          </Flex>
                         </Col>
                       </>
                     ) : (
@@ -228,7 +230,7 @@ export default function Homepage() {
                                 label="Feito"
                                 checked={item.feito}
                                 onClick={() => {
-                                  let resultado = data.map((item_busca) => {
+                                  let resultado = tarefas.map((item_busca) => {
                                     if (item_busca.id === item.id) {
                                       return {
                                         ...item_busca,
@@ -238,14 +240,14 @@ export default function Homepage() {
                                     }
                                     return item_busca;
                                   });
-                                  setData(resultado);
+                                  setTarefas(resultado);
                                 }} />
                             </div>
                             <ButtonGroup>
                               <Button
                                 variant="primary"
                                 onClick={() => {
-                                  setItemEditadoId(item.id);
+                                  setItemEditado(item);
                                   setModoEditar(!modoEditar);
                                 }}
                                 disabled={(item.feito) ? true : false}
@@ -259,8 +261,8 @@ export default function Homepage() {
                                 variant="danger"
                                 onClick={() => {
                                   let filtraItem = (item_filtrado: TarefaTypes): boolean => item_filtrado.id !== item.id;
-                                  let resultado = data.filter(filtraItem)
-                                  setData(resultado);
+                                  let resultado = tarefas.filter(filtraItem)
+                                  setTarefas(resultado);
                                 }}
                                 disabled={(item.feito) ? true : false}
                               >
