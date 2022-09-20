@@ -65,6 +65,10 @@ export const TarefaProvider: FC<TarefaProviderProps> = ({ children }) => {
   const listarTarefas = () => tarefas;
 
   return (
-    <div>{children}</div>
+    <TarefaContext.Provider
+      value={{
+        tarefas, criarTarefa, editarNomeTarefa, editarNomeTarefa2, editarStatusTarefa,removerTarefa, listarTarefas
+      }}
+    >{children}</TarefaContext.Provider>
   );
 };

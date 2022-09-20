@@ -11,7 +11,7 @@ export interface FormTypes {
 }
 
 export type TarefaContextType = {
-  tarefas: TarefaTypes[];
+  tarefas: TarefaTypes[]; /* Ver se vai sair ou continuar */
   criarTarefa: (tarefa: string) => void;
   editarNomeTarefa: (id: string, tarefa: string) => void;
   editarNomeTarefa2: (id: string, tarefa: string) => void;
