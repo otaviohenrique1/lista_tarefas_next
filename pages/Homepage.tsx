@@ -151,13 +151,13 @@ export default function Homepage() {
                             onSubmit={formikEdit.handleSubmit}
                           >
                             <Form.Group
-                              controlId="editar_tarefa"
+                              controlId="tarefa"
                               onChange={formikEdit.handleChange}
                               defaultValue={formikEdit.values.tarefa}
                             >
                               <Form.Control
                                 as="textarea"
-                                name="editar_tarefa"
+                                name="tarefa"
                                 placeholder="Digite a tarefa"
                                 value={item.tarefa}
                                 rows={1}
